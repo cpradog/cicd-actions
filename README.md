@@ -65,7 +65,7 @@ This action will bump version based on all commits since last branch tag.
 
         - name: calculate version
           id: version
-          uses: cpradog/cicd-actions/bump-version@master
+          uses: cpradog/cicd-actions/version-bump@master
           with:
             LOG_LEVEL: 0 # DEBUG
             VERSION_TAG_PREFIX: v # default
