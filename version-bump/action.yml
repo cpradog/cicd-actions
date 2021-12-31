@@ -54,7 +54,7 @@ runs:
         LAST_VERSION=$(git_last_version_from_tags)
         LAST_TAG=$(git_last_version_tag || git_first_commit)
         COMMITS=$(git_commits_between_refs "${LAST_TAG}" "HEAD")
-        NEXT_VERSION=$(version_parts $(calculate_bump "${LAST_VERSION}" "${COMMITS}"))
+        NEXT_VERSION=$(calculate_bump "${LAST_VERSION}" "${COMMITS}")
         set_output version "${NEXT_VERSION}"
         set_output major "$(version_major $NEXT_VERSION)"
         set_output minor "$(version_minor $NEXT_VERSION)"
