@@ -13,7 +13,7 @@ function git_first_commit() {
 }
 
 function git_last_version_tag() {
-  git describe --match "${VERSION_TAG_PREFIX}*" --abbrev=0 2> /dev/null
+  git describe --match "${VERSION_TAG_PREFIX}*" --abbrev=0 --tags 2> /dev/null
 }
 
 function git_last_version_from_tags() {
