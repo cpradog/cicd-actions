@@ -27,7 +27,6 @@ This action will output the version information for current branch tags.
           id: version
           uses: cpradog/cicd-actions/current-version@master
           with:
-            LOG_LEVEL: 0 # DEBUG
             VERSION_TAG_PREFIX: v # default
 
         - name: show result
@@ -67,7 +66,6 @@ This action will bump version based on all commits since last branch tag.
           id: version
           uses: cpradog/cicd-actions/version-bump@master
           with:
-            LOG_LEVEL: 0 # DEBUG
             VERSION_TAG_PREFIX: v # default
             BUMP_MAJOR_REGEX: "BREAKING\ CHANGE"
             BUMP_MINOR_REGEX: "^feat"

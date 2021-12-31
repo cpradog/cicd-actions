@@ -5,10 +5,6 @@ branding:
   icon: tag
   color: blue
 inputs:
-  LOG_LEVEL:
-    description: The action diagnostics verbosity
-    required: false
-    default: "1"
   VERSION_TAG_PREFIX:
     description: git tag prefix for versions
     required: false
@@ -28,7 +24,7 @@ outputs:
     value: ${{ steps.version.outputs.patch }}
   extra:
     description: Optional version extra parts
-    value: ${{ steps.version.outputs.extra }}
+    value: ${{ steps.version.outputs.extras }}
   tag:
     description: Optional version tag
     value: ${{ steps.version.outputs.tag }}
@@ -39,10 +35,10 @@ runs:
       shell: bash
       run: |
         source $(readlink -f $GITHUB_ACTION_PATH/../lib/base.sh)
-        LAST_VERSION=$(version_parts $(git_last_version_from_tags))
-        echo "::set-output name=version::${LAST_VERSION[0]}"
-        echo "::set-output name=major::${LAST_VERSION[1]}"
-        echo "::set-output name=minor::${LAST_VERSION[2]}"
-        echo "::set-output name=patch::${LAST_VERSION[3]}"
-        echo "::set-output name=extra::${LAST_VERSION[4]}"
-        echo "::set-output name=tag::${LAST_VERSION[5]}"
+        LAST_VERSION=$(git_last_version_from_tags)
+        set_output version "${LAST_VERSION}"
+        set_output major "$(version_major $LAST_VERSION)"
+        set_output minor "$(version_minor $LAST_VERSION)"
+        set_output patch "$(version_patch $LAST_VERSION)"
+        set_output extras "$(version_extras $LAST_VERSION)"
+        set_output tag "$(version_tag $LAST_VERSION)"

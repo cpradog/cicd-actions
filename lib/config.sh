@@ -6,11 +6,6 @@
 export VERSION_TAG_PREFIX=${VERSION_PREFIX:-v}
 
 ##!
-# The diagnostics verbosity level.
-##
-export LOG_LEVEL=${LOG_LEVEL:-1} # INFO
-
-##!
 # The regular expression to bump major version part.
 ##
 export BUMP_MAJOR_REGEX="${BUMP_MAJOR_REGEX:-BREAKING CHANGE}"

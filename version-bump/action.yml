@@ -5,10 +5,6 @@ branding:
   icon: tag
   color: blue
 inputs:
-  LOG_LEVEL:
-    description: The action diagnostics verbosity
-    required: false
-    default: "1"
   VERSION_TAG_PREFIX:
     description: git tag prefix for versions
     required: false
@@ -59,9 +55,9 @@ runs:
         LAST_TAG=$(git_last_version_tag || git_first_commit)
         COMMITS=$(git_commits_between_refs "${LAST_TAG}" "HEAD")
         NEXT_VERSION=$(version_parts $(calculate_bump "${LAST_VERSION}" "${COMMITS}"))
-        echo "::set-output name=version::${NEXT_VERSION[0]}"
-        echo "::set-output name=major::${NEXT_VERSION[1]}"
-        echo "::set-output name=minor::${NEXT_VERSION[2]}"
-        echo "::set-output name=patch::${NEXT_VERSION[3]}"
-        echo "::set-output name=extra::${NEXT_VERSION[4]}"
-        echo "::set-output name=tag::${NEXT_VERSION[5]}"
+        set_output version "${NEXT_VERSION}"
+        set_output major "$(version_major $NEXT_VERSION)"
+        set_output minor "$(version_minor $NEXT_VERSION)"
+        set_output patch "$(version_patch $NEXT_VERSION)"
+        set_output extras "$(version_extras $NEXT_VERSION)"
+        set_output tag "$(version_tag $NEXT_VERSION)"

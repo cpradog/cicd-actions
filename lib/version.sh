@@ -73,7 +73,7 @@ function version_patch() {
   echo "${parts[3]}"
 }
 
-function version_extra() {
+function version_extras() {
   read -ra parts <<< "$(version_parts "$*")"
   echo "${parts[4]}"
 }
