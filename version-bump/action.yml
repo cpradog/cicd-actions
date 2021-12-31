@@ -1,0 +1,67 @@
+name: Version bump
+description: Output next version based on commits messages
+author: Carlos Prado
+branding:
+  icon: tag
+  color: blue
+inputs:
+  LOG_LEVEL:
+    description: The action diagnostics verbosity
+    required: false
+    default: "1"
+  VERSION_TAG_PREFIX:
+    description: git tag prefix for versions
+    required: false
+    default: "v"
+  BUMP_MAJOR_REGEX:
+    description: regular expresion to detect major bump commits
+    required: false
+    default: "BREAKING\ CHANGE"
+  BUMP_MINOR_REGEX:
+    description: regular expression to detect minor bump commits
+    required: false
+    default: "^feat"
+  BUMP_PATCH_REGEX:
+    description: regular expression to dectect patch bump commits
+    required: false
+    default: "^fix"
+  BUMP_VERSION_TAG:
+    description: add custom version tag part. For example, 'pre' in '1.2.3-pre'.
+    required: false
+    default: ""
+outputs:
+  version:
+    description: The version string
+    value: ${{ steps.version.outputs.version }}
+  major:
+    description: The version major number
+    value: ${{ steps.version.outputs.major }}
+  minor:
+    description: The version minor number
+    value: ${{ steps.version.outputs.minor }}
+  patch:
+    description: The version patch number
+    value: ${{ steps.version.outputs.patch }}
+  extra:
+    description: Optional version extra parts
+    value: ${{ steps.version.outputs.extra }}
+  tag:
+    description: Optional version tag
+    value: ${{ steps.version.outputs.tag }}
+runs:
+  using: composite
+  steps:
+    - id: version
+      shell: bash
+      run: |
+        source $(readlink -f $GITHUB_ACTION_PATH/../lib/base.sh)
+        LAST_VERSION=$(git_last_version_from_tags)
+        LAST_TAG=$(git_last_version_tag || git_first_commit)
+        COMMITS=$(git_commits_between_refs "${LAST_TAG}" "HEAD")
+        NEXT_VERSION=$(version_parts $(calculate_bump "${LAST_VERSION}" "${COMMITS}"))
+        echo "::set-output name=version::${NEXT_VERSION[0]}"
+        echo "::set-output name=major::${NEXT_VERSION[1]}"
+        echo "::set-output name=minor::${NEXT_VERSION[2]}"
+        echo "::set-output name=patch::${NEXT_VERSION[3]}"
+        echo "::set-output name=extra::${NEXT_VERSION[4]}"
+        echo "::set-output name=tag::${NEXT_VERSION[5]}"

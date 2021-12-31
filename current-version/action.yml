@@ -1,0 +1,48 @@
+name: Current version
+description: Extract current branch version from git tags
+author: Carlos Prado
+branding:
+  icon: tag
+  color: blue
+inputs:
+  LOG_LEVEL:
+    description: The action diagnostics verbosity
+    required: false
+    default: "1"
+  VERSION_TAG_PREFIX:
+    description: git tag prefix for versions
+    required: false
+    default: "v"
+outputs:
+  version:
+    description: The version string
+    value: ${{ steps.version.outputs.version }}
+  major:
+    description: The version major number
+    value: ${{ steps.version.outputs.major }}
+  minor:
+    description: The version minor number
+    value: ${{ steps.version.outputs.minor }}
+  patch:
+    description: The version patch number
+    value: ${{ steps.version.outputs.patch }}
+  extra:
+    description: Optional version extra parts
+    value: ${{ steps.version.outputs.extra }}
+  tag:
+    description: Optional version tag
+    value: ${{ steps.version.outputs.tag }}
+runs:
+  using: composite
+  steps:
+    - id: version
+      shell: bash
+      run: |
+        source $(readlink -f $GITHUB_ACTION_PATH/../lib/base.sh)
+        LAST_VERSION=$(version_parts $(git_last_version_from_tags))
+        echo "::set-output name=version::${LAST_VERSION[0]}"
+        echo "::set-output name=major::${LAST_VERSION[1]}"
+        echo "::set-output name=minor::${LAST_VERSION[2]}"
+        echo "::set-output name=patch::${LAST_VERSION[3]}"
+        echo "::set-output name=extra::${LAST_VERSION[4]}"
+        echo "::set-output name=tag::${LAST_VERSION[5]}"
